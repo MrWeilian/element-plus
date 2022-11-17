@@ -75,7 +75,9 @@ export default defineConfig(async ({ mode }) => {
       mkcert(),
       Inspect(),
     ],
-
+    build: {
+      minify: false
+    },
     optimizeDeps: {
       include: ['vue', '@vue/shared', ...dependencies, ...optimizeDeps],
     },

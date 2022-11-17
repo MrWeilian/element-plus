@@ -129,6 +129,7 @@ export default defineComponent({
       registerComplexWatchers()
     })
     onMounted(() => {
+      console.log('我被挂载了')
       const parent = columnOrTableParent.value
       const children = isSubColumn.value
         ? parent.vnode.el.children
@@ -145,6 +146,7 @@ export default defineComponent({
         )
     })
     onBeforeUnmount(() => {
+      console.log('我被卸载了')
       owner.value.store.commit(
         'removeColumn',
         columnConfig.value,
@@ -157,6 +159,7 @@ export default defineComponent({
     return
   },
   render() {
+    debugger // table-column
     try {
       const renderDefault = this.$slots.default?.({
         row: {},

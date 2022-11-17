@@ -66,6 +66,7 @@ export default defineComponent({
     }
   },
   render() {
+    debugger // table-bodytdChildren
     const { wrappedRowRender, store } = this
     const data = store.states.data.value || []
     return h('tbody', {}, [

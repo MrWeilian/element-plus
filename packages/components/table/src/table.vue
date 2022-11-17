@@ -144,7 +144,14 @@
 
 <script lang="ts">
 // @ts-nocheck
-import { computed, defineComponent, getCurrentInstance, provide } from 'vue'
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  onUpdated,
+  provide,
+  watch,
+} from 'vue'
 import { debounce } from 'lodash-unified'
 import { Mousewheel } from '@element-plus/directives'
 import { useLocale, useNamespace } from '@element-plus/hooks'
@@ -197,6 +204,9 @@ export default defineComponent({
     'header-dragend',
     'expand-change',
   ],
+  /*
+   *
+   * */
   setup(props) {
     type Row = typeof props.data[number]
     const { t } = useLocale()
@@ -270,6 +280,16 @@ export default defineComponent({
     const computedEmptyText = computed(() => {
       return props.emptyText || t('el.table.emptyText')
     })
+
+    watch(
+      () => table.store.states._columns,
+      (col) => {
+        console.log('检测到变化？？？', col)
+      },
+      {
+        deep: true,
+      }
+    )
 
     return {
       ns,

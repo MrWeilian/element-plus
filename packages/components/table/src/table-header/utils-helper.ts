@@ -24,6 +24,7 @@ const convertToRows = <T>(
   originColumns: TableColumnCtx<T>[]
 ): TableColumnCtx<T>[] => {
   let maxLevel = 1
+
   const traverse = (column: TableColumnCtx<T>, parent: TableColumnCtx<T>) => {
     if (parent) {
       column.level = parent.level + 1
@@ -71,6 +72,7 @@ const convertToRows = <T>(
 function useUtils<T>(props: TableHeaderProps<T>) {
   const parent = inject(TABLE_INJECTION_KEY)
   const columnRows = computed(() => {
+    console.log('computed 执行了呢')
     return convertToRows(props.store.states.originColumns.value)
   })
   const isGroup = computed(() => {

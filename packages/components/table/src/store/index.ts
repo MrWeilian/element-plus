@@ -75,6 +75,7 @@ function useStore<T>() {
       column: TableColumnCtx<T>,
       parent: TableColumnCtx<T>
     ) {
+      console.log('insert column???')
       const array = unref(states._columns)
       let newColumns = []
       if (!parent) {

@@ -118,6 +118,7 @@ export default defineComponent({
     }
   },
   render() {
+    debugger // table-header
     const {
       ns,
       isGroup,

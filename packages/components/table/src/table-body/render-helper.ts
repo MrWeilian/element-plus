@@ -140,6 +140,7 @@ function useRender<T>(props: Partial<TableBodyProps<T>>) {
       store.states
     const columns = store.states.columns.value
     const hasExpandColumn = columns.some(({ type }) => type === 'expand')
+
     if (hasExpandColumn) {
       const expanded = isRowExpanded(row)
       const tr = rowRender(row, $index, undefined, expanded)

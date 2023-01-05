@@ -31,6 +31,7 @@ function useRender<T>(
   const realAlign = ref<string>()
   const realHeaderAlign = ref<string>()
   const ns = useNamespace('table')
+  const columnClassName = '_table-column'
   watchEffect(() => {
     realAlign.value = props.align ? `is-${props.align}` : null
     // nextline help render
@@ -188,6 +189,30 @@ function useRender<T>(
   const getColumnElIndex = (children, child) => {
     return Array.prototype.indexOf.call(children, child)
   }
+  const isColumnDom = (dom: Element) =>
+    dom.className === columnClassName && dom.getAttribute('column-id')
+  const filterColumnDom = (parentDom: Element): HTMLCollection => {
+    const arrFn = Array.prototype
+    const childrenList: Element[] = []
+    arrFn.forEach.call(parentDom.children, (child) => {
+      if (child.nodeType !== 1) return
+      if (child.childNodes?.length) {
+        const children = filterColumnDom(child)
+        isColumnDom(child)
+          ? childrenList.push(child)
+          : childrenList.push(...children)
+      } else {
+        isColumnDom(child) && childrenList.push(child)
+      }
+    })
+    while (parentDom.firstChild) {
+      parentDom.removeChild(parentDom.lastChild as ChildNode)
+    }
+    childrenList.forEach((child) => {
+      parentDom.appendChild(child)
+    })
+    return parentDom.children
+  }
 
   return {
     columnId,
@@ -195,11 +220,13 @@ function useRender<T>(
     isSubColumn,
     realHeaderAlign,
     columnOrTableParent,
+    columnClassName,
     setColumnWidth,
     setColumnForcedProps,
     setColumnRenders,
     getPropsData,
     getColumnElIndex,
+    filterColumnDom,
   }
 }
 

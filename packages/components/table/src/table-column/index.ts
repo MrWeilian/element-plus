@@ -55,6 +55,8 @@ export default defineComponent({
       getPropsData,
       getColumnElIndex,
       realAlign,
+      columnClassName,
+      filterColumnDom,
     } = useRender(props as unknown as TableColumnCtx<unknown>, slots, owner)
 
     const parent = columnOrTableParent.value
@@ -129,9 +131,11 @@ export default defineComponent({
     })
     onMounted(() => {
       const parent = columnOrTableParent.value
-      const children = isSubColumn.value
-        ? parent.vnode.el.children
-        : parent.refs.hiddenColumns?.children
+      const parentDom = isSubColumn.value
+        ? parent.vnode.el
+        : parent.refs.hiddenColumns
+      // console.log('parent', parentDom)
+      const children = filterColumnDom(parentDom)
       const getColumnIndex = () =>
         getColumnElIndex(children || [], instance.vnode.el)
       columnConfig.value.getColumnIndex = getColumnIndex
@@ -153,7 +157,10 @@ export default defineComponent({
     instance.columnId = columnId.value
 
     instance.columnConfig = columnConfig
-    return
+    return {
+      columnId: columnId.value,
+      columnClassName,
+    }
   },
   render() {
     try {
@@ -162,31 +169,19 @@ export default defineComponent({
         column: {},
         $index: -1,
       })
-      const children = []
-      if (Array.isArray(renderDefault)) {
-        for (const childNode of renderDefault) {
-          if (
-            childNode.type?.name === 'ElTableColumn' ||
-            childNode.shapeFlag & 2
-          ) {
-            children.push(childNode)
-          } else if (
-            childNode.type === Fragment &&
-            Array.isArray(childNode.children)
-          ) {
-            childNode.children.forEach((vnode) => {
-              // No rendering when vnode is dynamic slot or text
-              if (vnode?.patchFlag !== 1024 && !isString(vnode?.children)) {
-                children.push(vnode)
-              }
-            })
-          }
-        }
-      }
-      const vnode = h('div', children)
-      return vnode
+      console.log('times')
+      debugger
+      return h(
+        'div',
+        { className: this.columnClassName, 'column-id': this.columnId },
+        renderDefault
+      )
     } catch {
-      return h('div', [])
+      return h(
+        'div',
+        { className: this.columnClassName, 'column-id': this.columnId },
+        []
+      )
     }
   },
 })
